@@ -115,12 +115,16 @@ public class MyLinkedListTester {
 		assertEquals("Remove: check size is correct ", 2, list1.size());
 		
 		// TODO: Add more tests here
+		String b = shortList.remove(0);
+		assertEquals("Remove: check a is correct ", "A", b);
+		assertEquals("Remove: check element 0 is correct ", "B", shortList.get(0));
+		assertEquals("Remove: check size is correct ", 1, list1.size());
+
 	}
 	
 	/** Test adding an element into the end of the list, specifically
 	 *  public boolean add(E element)
 	 * */
-	@Test
 	public void testAddEnd()
 	{
         // TODO: implement this test
