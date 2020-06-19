@@ -1,7 +1,9 @@
 package spelling;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +22,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     public AutoCompleteDictionaryTrie()
 	{
 		root = new TrieNode();
+		size = 0;
 	}
 	
 	
@@ -40,7 +43,25 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		TrieNode currentPointer = root;
+		
+		word = word.toLowerCase();
+		
+		if (isWord(word)) {
+			return false;
+		}
+		
+		for (int i = 0; i < word.length(); i++) {
+			char c = word.charAt(i);
+			if (currentPointer.getChild(c) == null) {
+				currentPointer.insert(c);
+			}
+			currentPointer = currentPointer.getChild(c);
+		}
+		
+		currentPointer.setEndsWord(true);
+		size += 1;
+		return true;
 	}
 	
 	/** 
@@ -50,7 +71,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -60,6 +81,20 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
+		TrieNode currentPointer = root;
+		
+		s = s.toLowerCase();
+		
+		for (int i = 0; i < s.length(); i++) {
+			char c = s.charAt(i);
+			currentPointer = currentPointer.getChild(c);
+			if (currentPointer == null) {
+				return false;
+			}
+		}
+		if (currentPointer.endsWord()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -100,8 +135,38 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       If it is a word, add it to the completions list
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
+    	 prefix = prefix.toLowerCase();
     	 
-         return null;
+    	 TrieNode currentPointer = root;
+//    	 String rootString = new String("");
+    	 List<String> result = new ArrayList<String>();
+    	 
+    	 
+    	 for (int i = 0; i < prefix.length(); i++) {
+ 			char c = prefix.charAt(i);
+// 			rootString += c;
+ 			if (currentPointer.getChild(c) == null) {
+ 				return new ArrayList<String>();
+ 			}
+ 			currentPointer = currentPointer.getChild(c);
+ 		 }
+    	 
+    	 Queue<TrieNode> q = new LinkedList<TrieNode>();
+    	 q.add(currentPointer);
+    	 
+    	 while (!q.isEmpty()) {
+    		 TrieNode curr = q.remove();
+    		 if (curr != null && result.size() < numCompletions) {
+//    			 String appendString = new String(rootString);
+    			 if (curr.endsWord()) {
+    				 result.add(curr.getText());
+    			 }
+    			 for (char childrenTrieKey: curr.getValidNextCharacters()) {
+    				 q.add(curr.getChild(childrenTrieKey));
+    			 }
+    		 }
+    	 }
+         return result;
      }
 
  	// For debugging

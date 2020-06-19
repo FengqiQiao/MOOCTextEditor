@@ -55,6 +55,7 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals("Testing size for empty dict", 0, emptyDict.size());
 		assertEquals("Testing size for small dict", 8, smallDict.size());
 		assertEquals("Testing size for large dict", 4438, largeDict.size());
+		
 	}
 	
 	/** Test the isWord method */
